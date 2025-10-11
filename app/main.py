@@ -1,10 +1,18 @@
 from fastapi import FastAPI
-from .api import endpoints
-from .models import models
+from .api import api_router
+from .models import Base
 from .core.database import engine
+from .core.logging import logger
 
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Superow API")
+app = FastAPI(
+    title="Superow API",
+    description="API para gerenciamento de aulas e afazeres diários",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
-app.include_router(endpoints.router, prefix="/api/v1")
+logger.info("Iniciando aplicação Superow API")
+app.include_router(api_router, prefix="/api/v1")
