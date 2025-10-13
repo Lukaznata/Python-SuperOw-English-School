@@ -4,6 +4,7 @@ from typing import List, Dict
 
 from ...core.database import get_db
 from ...schemas import Professor, ProfessorCreate, Aluno
+from ...schemas.pagination import PaginatedResponse
 from ...services import ProfessorService
 from ...api.deps import get_current_user
 from ...models.administrador import Administrador
@@ -19,15 +20,29 @@ def criar_professor(
     service = ProfessorService(db)
     return service.criar_professor(professor)
 
-@router.get("/", response_model=List[Professor])
+@router.get("/", response_model=PaginatedResponse[Professor])
 def listar_professores(
     skip: int = 0, 
     limit: int = 100, 
     db: Session = Depends(get_db),
     current_user: Administrador = Depends(get_current_user)
 ):
+    """
+    Lista professores com paginação.
+    
+    - **skip**: Número de registros para pular (default: 0)
+    - **limit**: Máximo de registros a retornar (default: 100, max: 1000)
+    """
     service = ProfessorService(db)
-    return service.listar_professores(skip, limit)
+    professores = service.listar_professores(skip, limit)
+    total = service.contar_professores()
+    
+    return PaginatedResponse(
+        items=professores,
+        total=total,
+        skip=skip,
+        limit=limit
+    )
 
 @router.get("/{professor_id}", response_model=Professor)
 def obter_professor(

@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field, field_serializer, field_validator
 from datetime import datetime
 from typing import Optional
 from decimal import Decimal
+from app.core.validators import validar_valor_positivo
 
 class AulaBase(BaseModel):
     professor_id: int
@@ -11,6 +12,18 @@ class AulaBase(BaseModel):
     valor_escola: Decimal
     status: bool = True
     repetir_dia: bool = False
+
+    @field_validator('valor_professor')
+    @classmethod
+    def validar_valor_professor(cls, v):
+        """Valida se o valor do professor é positivo"""
+        return validar_valor_positivo(v, 'Valor do professor')
+    
+    @field_validator('valor_escola')
+    @classmethod
+    def validar_valor_escola(cls, v):
+        """Valida se o valor da escola é positivo"""
+        return validar_valor_positivo(v, 'Valor da escola')
 
 class AulaCreate(AulaBase):
     pass

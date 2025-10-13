@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Dict
 from ...core.database import get_db
 from ...schemas import Aula, AulaCreate, Aluno
+from ...schemas.pagination import PaginatedResponse
 from ...services import AulaService
 from ...api.deps import get_current_user
 from ...models.administrador import Administrador
@@ -18,15 +19,29 @@ def criar_aula(
     service = AulaService(db)
     return service.criar_aula(aula)
 
-@router.get("/", response_model=List[Aula])
+@router.get("/", response_model=PaginatedResponse[Aula])
 def listar_aulas(
     skip: int = 0, 
     limit: int = 100, 
     db: Session = Depends(get_db),
     current_user: Administrador = Depends(get_current_user)
 ):
+    """
+    Lista aulas com paginação.
+    
+    - **skip**: Número de registros para pular (default: 0)
+    - **limit**: Máximo de registros a retornar (default: 100, max: 1000)
+    """
     service = AulaService(db)
-    return service.listar_aulas(skip, limit)
+    aulas = service.listar_aulas(skip, limit)
+    total = service.contar_aulas()
+    
+    return PaginatedResponse(
+        items=aulas,
+        total=total,
+        skip=skip,
+        limit=limit
+    )
 
 @router.get("/{aula_id}", response_model=Aula)
 def obter_aula(

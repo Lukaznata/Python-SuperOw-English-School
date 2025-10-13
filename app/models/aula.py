@@ -16,6 +16,7 @@ class Aula(Base):
     repetir_dia = Column(Boolean, default=False)
 
     professor = relationship("Professor", back_populates="aulas")
+    
     alunos = relationship(
         "Aluno",
         secondary=aula_aluno_association,

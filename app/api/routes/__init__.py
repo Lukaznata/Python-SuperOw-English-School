@@ -5,3 +5,6 @@ from .idioma import router
 from .aluno import router
 from .aula import router
 from .login import router
+from .carteira import router
+from .conta_receber import router
+from .conta_pagar import router

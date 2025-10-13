@@ -25,6 +25,10 @@ class AulaService:
     def listar_aulas(self, skip: int = 0, limit: int = 100):
         aulas = self.db.query(Aula).offset(skip).limit(limit).all()
         return aulas
+    
+    def contar_aulas(self) -> int:
+        """Conta o total de aulas"""
+        return self.db.query(Aula).count()
 
     def obter_aula(self, aula_id: int):
         aula = self.db.query(Aula).filter(Aula.id == aula_id).first()

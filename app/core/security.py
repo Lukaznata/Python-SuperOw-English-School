@@ -1,12 +1,25 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+import os
+from dotenv import load_dotenv
 
-# Configurações
-SECRET_KEY = "sua-chave-secreta-super-segura-aqui-mude-em-producao"
-ALGORITHM = "HS256"
-# ACCESS_TOKEN_EXPIRE_MINUTES = 60
+load_dotenv()
+
+# Configurações de Segurança - Carregadas de variáveis de ambiente
+SECRET_KEY = os.getenv("SECRET_KEY", "sua-chave-secreta-super-segura-aqui-mude-em-producao")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))
+
+# Validação de segurança
+if SECRET_KEY == "sua-chave-secreta-super-segura-aqui-mude-em-producao":
+    import warnings
+    warnings.warn(
+        "⚠️  AVISO DE SEGURANÇA: SECRET_KEY não foi configurada! "
+        "Configure a variável SECRET_KEY no arquivo .env",
+        UserWarning
+    )
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -22,9 +35,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     """Cria token JWT"""
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=9999)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

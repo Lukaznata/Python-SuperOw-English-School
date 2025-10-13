@@ -45,8 +45,21 @@ class AfazerService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Erro ao listar afazeres"
             )
+    
+    def contar_afazeres(self, administrador_id: int = None) -> int:
+        """Conta o total de afazeres"""
+        try:
+            query = self.db.query(AfazerDiario)
+            if administrador_id:
+                query = query.filter(AfazerDiario.administrador_id == administrador_id)
+            return query.count()
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Erro ao contar afazeres"
+            )
 
-    def atualizar_afazer(self, afazer_id: int, afazer: AfazerDiarioCreate) -> AfazerDiario:
+    def atualizar_afazer(self, afazer_id: int, afazer: AfazerDiarioCreate, id_adm_logado: int) -> AfazerDiario:
         try:
             logger.info(f"Tentando atualizar afazer: ID {afazer_id}")
             db_afazer = self.db.query(AfazerDiario).filter(AfazerDiario.id == afazer_id).first()
@@ -55,6 +68,14 @@ class AfazerService:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail="Afazer não encontrado"
+                )
+            
+            # Verificar se o afazer pertence ao administrador logado
+            if db_afazer.administrador_id != id_adm_logado:
+                logger.warning(f"Tentativa de atualizar afazer de outro admin: ID {afazer_id}")
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Você não tem permissão para atualizar este afazer"
                 )
 
             admin = self.db.query(Administrador).filter(
@@ -78,7 +99,7 @@ class AfazerService:
             logger.error(f"Erro ao atualizar afazer: {str(e)}")
             raise
 
-    def deletar_afazer(self, afazer_id: int) -> dict:
+    def deletar_afazer(self, afazer_id: int, id_adm_logado: int) -> dict:
         try:
             logger.info(f"Tentando deletar afazer: ID {afazer_id}")
             db_afazer = self.db.query(AfazerDiario).filter(AfazerDiario.id == afazer_id).first()
@@ -87,6 +108,14 @@ class AfazerService:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail="Afazer não encontrado"
+                )
+            
+            # Verificar se o afazer pertence ao administrador logado
+            if db_afazer.administrador_id != id_adm_logado:
+                logger.warning(f"Tentativa de deletar afazer de outro admin: ID {afazer_id}")
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Você não tem permissão para deletar este afazer"
                 )
 
             self.db.delete(db_afazer)

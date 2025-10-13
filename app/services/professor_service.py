@@ -28,6 +28,10 @@ class ProfessorService:
     def listar_professores(self, skip: int = 0, limit: int = 100):
         professores = self.db.query(Professor).offset(skip).limit(limit).all()
         return professores
+    
+    def contar_professores(self) -> int:
+        """Conta o total de professores"""
+        return self.db.query(Professor).count()
 
     def obter_professor(self, professor_id: int):
         professor = self.db.query(Professor).filter(Professor.id == professor_id).first()

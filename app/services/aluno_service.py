@@ -2,26 +2,42 @@ from sqlalchemy.orm import Session, joinedload
 from ..models import Aluno, Professor
 from ..schemas import AlunoCreate
 from fastapi import HTTPException, status
+from ..core.logging import logger
 
 class AlunoService:
     def __init__ (self, db: Session):
         self.db = db
+        logger.debug("AlunoService inicializado")
         
     def criar_aluno(self, aluno: AlunoCreate):
-        db_aluno = Aluno(**aluno.model_dump())
-        self.db.add(db_aluno)
-        self.db.commit()
-        self.db.refresh(db_aluno)
-        return db_aluno
+        logger.debug(f"Criando aluno no banco de dados: {aluno.nome_completo}")
+        try:
+            db_aluno = Aluno(**aluno.model_dump())
+            self.db.add(db_aluno)
+            self.db.commit()
+            self.db.refresh(db_aluno)
+            logger.info(f"Aluno criado no banco - ID: {db_aluno.id}, Nome: {db_aluno.nome_completo}")
+            return db_aluno
+        except Exception as e:
+            logger.error(f"Erro ao criar aluno no banco: {str(e)}")
+            self.db.rollback()
+            raise
     
     def listar_alunos(self, skip: int = 0, limit: int = 100):
         alunos = self.db.query(Aluno).offset(skip).limit(limit).all()
         return alunos
     
+    def contar_alunos(self) -> int:
+        """Conta o total de alunos"""
+        return self.db.query(Aluno).count()
+    
     def obter_aluno(self, aluno_id: int):
+        logger.debug(f"Buscando aluno ID: {aluno_id}")
         aluno = self.db.query(Aluno).filter(Aluno.id == aluno_id).first()
         if aluno is None:
+            logger.warning(f"Aluno ID: {aluno_id} não encontrado")
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Aluno não encontrado")
+        logger.debug(f"Aluno encontrado: {aluno.nome_completo}")
         return aluno
     
     def atualizar_aluno(self, aluno_id: int, aluno: AlunoCreate):

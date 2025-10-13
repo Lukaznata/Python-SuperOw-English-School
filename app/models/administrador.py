@@ -10,3 +10,6 @@ class Administrador(Base):
     senha_hash = Column(Text, nullable=False)
     
     afazeres = relationship("AfazerDiario", back_populates="administrador")
+    carteira = relationship("Carteira", back_populates="administrador", uselist=False)
+    contas_receber = relationship("ContaReceber", back_populates="administrador")
+    contas_pagar = relationship("ContaPagar", back_populates="administrador")
