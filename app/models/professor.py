@@ -12,9 +12,9 @@ class Professor(Base):
     data_nasc = Column(Date, nullable=False)
     cpf = Column(String(11), unique=True)
     telefone = Column(String(11), unique=True, nullable=False)
-    pdf_contrato = Column(LargeBinary)
+    pdf_contrato = Column(LargeBinary(length=(2**32)-1))  # ~4GB
     mei = Column(String(250))
-    foto_perfil = Column(LargeBinary)
+    foto_perfil = Column(LargeBinary(length=(2**32)-1))  # ~4GB
     nacionalidade = Column(String(100), nullable=False)
     situacao = Column(Boolean, default=True)
 

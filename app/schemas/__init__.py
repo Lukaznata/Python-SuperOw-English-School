@@ -1,43 +1,77 @@
-from .afazer import AfazerDiario, AfazerDiarioBase, AfazerDiarioCreate
-from .administrador import Administrador, AdministradorBase, AdministradorCreate
-from .token import Token, TokenData
-from .professor import Professor, ProfessorBase, ProfessorCreate
-from .aluno import Aluno, AlunoBase, AlunoCreate
-from .aula import Aula, AulaCreate
-from .carteira import Carteira, CarteiraBase, CarteiraCreate, CarteiraUpdate
-from .conta_receber import ContaReceber, ContaReceberBase, ContaReceberCreate, ContaReceberUpdate
-from .conta_pagar import ContaPagar, ContaPagarBase, ContaPagarCreate, ContaPagarUpdate
-from .pagination import PaginatedResponse, PaginationParams
+from .afazer import *
+from .administrador import *
+from .token import *
+from .professor import *
+from .aluno import *
+from .aula import *
+from .carteira import *
+from .conta_receber import *
+from .conta_pagar import *
+from .pagination import *
+from .idioma import *
+from .status_mensalidade import *
 
 __all__ = [
-    "Professor",
-    "ProfessorBase",
-    "ProfessorCreate",
+    # Administrador
+    "AdministradorCreate",
+    "AdministradorUpdate",
+    "AdministradorResponse",
+    # Afazer
     "AfazerDiario",
     "AfazerDiarioBase",
     "AfazerDiarioCreate",
-    "Administrador",
-    "AdministradorBase",
+    # Administrador
     "AdministradorCreate",
+    "AdministradorUpdate",
+    "AdministradorResponse",
+    # Token
     "Token",
     "TokenData",
+    # Professor
+    "Professor",
+    "ProfessorBase",
+    "ProfessorCreate",
+    # Aluno
     "Aluno",
     "AlunoBase",
     "AlunoCreate",
+    # Aula
     "Aula",
     "AulaCreate",
+    # Carteira
     "Carteira",
     "CarteiraBase",
     "CarteiraCreate",
     "CarteiraUpdate",
+    # Conta Receber
     "ContaReceber",
     "ContaReceberBase",
     "ContaReceberCreate",
     "ContaReceberUpdate",
+    # Conta Pagar
     "ContaPagar",
     "ContaPagarBase",
     "ContaPagarCreate",
     "ContaPagarUpdate",
+    # Paginated Response
     "PaginatedResponse",
-    "PaginationParams"
+    "PaginationParams",
+    # Idioma
+    "Idioma",
+    "IdiomaBase",
+    "IdiomaCreate",
+    # Professor
+    "Professor",
+    "ProfessorBase",
+    "ProfessorCreate",
+    # Token
+    "Token",
+    "TokenData",
+    # Status Mensalidade
+    "StatusMensalidade",
+    "StatusMensalidadeBase",
+    "StatusMensalidadeCreate",
+    "StatusMensalidadeUpdate",
+    "StatusMensalidadeResponse",
+    "StatusMensalidadeWithAluno",
 ]

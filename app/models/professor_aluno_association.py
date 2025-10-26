@@ -6,4 +6,3 @@ professor_aluno_association = Table(
     Column('professor_id', Integer, ForeignKey('professores.id'), primary_key=True),
     Column('aluno_id', Integer, ForeignKey('alunos.id'), primary_key=True)
 )
-

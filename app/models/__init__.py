@@ -10,5 +10,6 @@ from .professor_aluno_association import professor_aluno_association
 from .aula_aluno_association import aula_aluno_association
 from .conta_receber import ContaReceber
 from .conta_pagar import ContaPagar
+from .status_mensalidade import StatusMensalidade
 
-__all__ = ["Administrador", "AfazerDiario", "Professor", "Idioma", "Base", "Aluno", "professor_aluno_association", "aula_aluno_association", "Aula", "Carteira", "ContaReceber", "ContaPagar"]
+__all__ = ["Administrador", "AfazerDiario", "Professor", "Idioma", "Base", "Aluno", "professor_aluno_association", "aula_aluno_association", "Aula", "Carteira", "ContaReceber", "ContaPagar", 'StatusMensalidade']

@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .routes import administrador, afazer, professor, idioma, aluno, aula, login, carteira, conta_receber, conta_pagar, health
+from .routes import administrador, afazer, professor, idioma, aluno, aula, login, carteira, conta_receber, conta_pagar, health, status_mensalidade
 
 api_router = APIRouter()
 api_router.include_router(health.router)  # Healthcheck sem autenticação
@@ -13,3 +13,4 @@ api_router.include_router(aula.router)
 api_router.include_router(carteira.router)
 api_router.include_router(conta_receber.router)
 api_router.include_router(conta_pagar.router)
+api_router.include_router(status_mensalidade.router)

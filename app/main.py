@@ -22,6 +22,7 @@ app = FastAPI(
 origins = [
     "http://localhost:3000",      # React, Next.js (desenvolvimento)
     "http://localhost:5173",      # Vite (desenvolvimento)
+    "http://localhost:4173",      # Vite (produção)
     "http://localhost:8080",      # Vue.js (desenvolvimento)
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5173",
