@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: superow_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 3rad5!brIb1eW&iXLWat
+      MYSQL_DATABASE: superow_db
+      MYSQL_PASSWORD: 3rad5!brIb1eW&iXLWat
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+  backend:
+    build:
+      context: ./backend
+    container_name: superow_backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: 3rad5!brIb1eW&iXLWat
+      DB_NAME: superow_db
+    depends_on:
+      - mysql
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    command:
+      [
+        "./wait-for-it.sh",
+        "mysql:3306",
+        "--",
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+      ]
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: superow_frontend
+    restart: always
+    ports:
+      - "4173:4173"
+    depends_on:
+      - backend
+    # volumes:
+    #   - ./frontend:/app
+
+volumes:
+  mysql_data:
