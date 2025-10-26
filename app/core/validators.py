@@ -125,7 +125,7 @@ def validar_valor_positivo(valor, nome_campo: str = 'Valor') -> float:
     Raises:
         ValueError: Se o valor não for positivo
     """
-    if valor <= 0:
+    if valor < 0:
         raise ValueError(f'{nome_campo} deve ser maior que zero')
     return valor
 

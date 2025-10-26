@@ -10,10 +10,11 @@ class ProfessorBase(BaseModel):
     data_nasc: date
     cpf: Optional[str] = None
     telefone: str
-    pdf_contrato: Optional[bytes] = None
+    pdf_contrato: Optional[str] = None
     mei: Optional[str] = None
     nacionalidade: str
     foto_perfil: Optional[bytes] = None
+    pix: Optional[str] = None
     situacao: bool = True
 
     @field_validator('cpf')
@@ -37,6 +38,7 @@ class Professor(ProfessorBase):
     mei: Optional[str] = None  # ⬅️ Permite retornar None
     foto_perfil: str
     pdf_contrato: str
+    pix: Optional[str] = None
 
     @field_validator('foto_perfil', mode='before')
     @classmethod
@@ -45,14 +47,14 @@ class Professor(ProfessorBase):
         if isinstance(v, bytes):
             return base64.b64encode(v).decode('utf-8')
         return v or ""  # ⬅️ Retorna string vazia se for None
-
+    
     @field_validator('pdf_contrato', mode='before')
     @classmethod
     def encode_pdf_contrato(cls, v):
-        """Converte bytes para base64"""
         if isinstance(v, bytes):
             return base64.b64encode(v).decode('utf-8')
-        return v or ""  # ⬅️ Retorna string vazia se for None
+        return v or ""  # string vazia se None
+
 
     class Config:
         from_attributes = True

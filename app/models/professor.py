@@ -17,6 +17,7 @@ class Professor(Base):
     foto_perfil = Column(LargeBinary(length=(2**32)-1))  # ~4GB
     nacionalidade = Column(String(100), nullable=False)
     situacao = Column(Boolean, default=True)
+    pix = Column(String(250))
 
     alunos = relationship(
         "Aluno",

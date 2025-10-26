@@ -92,7 +92,22 @@ class ProfessorService:
         
         if professor_data.get('foto_perfil'):
             professor_data['foto_perfil'] = self.processar_foto_perfil(professor_data['foto_perfil'])
-        
+
+        if 'pdf_contrato' in professor_data:
+            pdf = professor_data['pdf_contrato']
+            if pdf:  # se tiver conteúdo
+                try:
+                    professor_data['pdf_contrato'] = base64.b64decode(pdf)
+                except Exception as e:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Erro ao processar PDF do contrato: {str(e)}"
+                    )
+            else:
+                # Se estiver vazio, envia None em vez de string vazia
+                professor_data['pdf_contrato'] = None
+
+            
         # Criar o professor
         try:
             db_professor = Professor(**professor_data)
@@ -142,6 +157,20 @@ class ProfessorService:
         # Processar foto de perfil se foi enviada
         if 'foto_perfil' in professor_data and professor_data['foto_perfil']:
             professor_data['foto_perfil'] = self.processar_foto_perfil(professor_data['foto_perfil'])
+
+        if 'pdf_contrato' in professor_data:
+            pdf = professor_data['pdf_contrato']
+            if pdf:  # se tiver conteúdo
+                try:
+                    professor_data['pdf_contrato'] = base64.b64decode(pdf)
+                except Exception as e:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Erro ao processar PDF do contrato: {str(e)}"
+                    )
+            else:
+                # Se estiver vazio, envia None em vez de string vazia
+                professor_data['pdf_contrato'] = None
         
         # Atualizar campos
         try:
